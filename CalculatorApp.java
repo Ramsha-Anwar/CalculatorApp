@@ -10,7 +10,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
 
     CalculatorApp() {
         setTitle("Calculator");
-        setSize(400, 570);
+        setSize(400, 630);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -25,7 +25,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
             "7", "8", "9", "*",
             "4", "5", "6", "-",
             "1", "2", "3", "+",
-            "0", ".", "=", 
+            "0", ".", "=", "←"   // Added backspace button
         };
 
         JButton[] buttons = new JButton[buttonLabels.length];
@@ -55,6 +55,13 @@ public class CalculatorApp extends JFrame implements ActionListener {
                 case "C":
                     textField.setText("");
                     num1 = num2 = result = 0;
+                    break;
+
+                case "←":  // New case for backspace
+                    String currentText = textField.getText();
+                    if (!currentText.isEmpty()) {
+                        textField.setText(currentText.substring(0, currentText.length() - 1));
+                    }
                     break;
 
                 case "=":
@@ -91,14 +98,10 @@ public class CalculatorApp extends JFrame implements ActionListener {
                     textField.setText("Invalid");
                     break;
 
-                case "+":
-                case "-":
-                case "*":
-                case "/":
-                case "%":
-                    String currentText = textField.getText();
-                    if (!currentText.isEmpty() && !endsWithOperator(currentText)) {
-                        textField.setText(currentText + input);
+                case "+": case "-": case "*": case "/": case "%":
+                    String txt = textField.getText();
+                    if (!txt.isEmpty() && !endsWithOperator(txt)) {
+                        textField.setText(txt + input);
                     }
                     break;
 
@@ -113,13 +116,13 @@ public class CalculatorApp extends JFrame implements ActionListener {
                     break;
 
                 case ".":
-                    String txt = textField.getText();
-                    if (!txt.isEmpty() && !txt.endsWith(".") && !hasTwoOperands(txt)) {
-                        textField.setText(txt + ".");
+                    String t = textField.getText();
+                    if (!t.isEmpty() && !t.endsWith(".") && !hasTwoOperands(t)) {
+                        textField.setText(t + ".");
                     }
                     break;
 
-                default: // For digits 0–9
+                default: // Digits 0-9
                     textField.setText(textField.getText() + input);
                     break;
             }
@@ -128,12 +131,10 @@ public class CalculatorApp extends JFrame implements ActionListener {
         }
     }
 
-   
     private boolean endsWithOperator(String s) {
         return s.endsWith("+") || s.endsWith("-") || s.endsWith("*") || s.endsWith("/") || s.endsWith("%");
     }
 
-   
     private boolean hasTwoOperands(String s) {
         return s.contains("+") || s.contains("-") || s.contains("*") || s.contains("/") || s.contains("%");
     }
