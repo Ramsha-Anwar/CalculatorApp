@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 public class CalculatorApp extends JFrame implements ActionListener {
@@ -7,6 +6,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
     JTextField textField;
     double num1 = 0, num2 = 0, result = 0;
     char operator;
+    CalculatorLogic logic = new CalculatorLogic(); 
 
     CalculatorApp() {
         setTitle("Calculator");
@@ -25,7 +25,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
             "7", "8", "9", "*",
             "4", "5", "6", "-",
             "1", "2", "3", "+",
-            "0", ".", "=", "←"   // Added backspace button
+            "0", ".", "=", "←"
         };
 
         JButton[] buttons = new JButton[buttonLabels.length];
@@ -57,7 +57,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
                     num1 = num2 = result = 0;
                     break;
 
-                case "←":  // New case for backspace
+                case "←":
                     String currentText = textField.getText();
                     if (!currentText.isEmpty()) {
                         textField.setText(currentText.substring(0, currentText.length() - 1));
@@ -78,17 +78,12 @@ public class CalculatorApp extends JFrame implements ActionListener {
                             operator = op;
 
                             switch (operator) {
-                                case '+': result = num1 + num2; break;
-                                case '-': result = num1 - num2; break;
-                                case '*': result = num1 * num2; break;
+                                case '+': result = logic.add(num1, num2); break;
+                                case '-': result = logic.subtract(num1, num2); break;
+                                case '*': result = logic.multiply(num1, num2); break;
                                 case '/':
-                                    if (num2 != 0) result = num1 / num2;
-                                    else {
-                                        textField.setText("Error: /0");
-                                        return;
-                                    }
-                                    break;
-                                case '%': result = num1 % num2; break;
+                                    result = logic.divide(num1, num2); break;
+                                case '%': result = logic.modulo(num1, num2); break;
                             }
 
                             textField.setText(String.valueOf(result));
@@ -107,12 +102,8 @@ public class CalculatorApp extends JFrame implements ActionListener {
 
                 case "√":
                     double val = Double.parseDouble(textField.getText());
-                    if (val < 0) {
-                        textField.setText("Invalid √");
-                    } else {
-                        result = Math.sqrt(val);
-                        textField.setText(String.valueOf(result));
-                    }
+                    result = logic.squareRoot(val);
+                    textField.setText(String.valueOf(result));
                     break;
 
                 case ".":
@@ -122,7 +113,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
                     }
                     break;
 
-                default: // Digits 0-9
+                default:
                     textField.setText(textField.getText() + input);
                     break;
             }
