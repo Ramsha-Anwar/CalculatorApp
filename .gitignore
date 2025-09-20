@@ -1,0 +1,9 @@
+# Ignore VS Code settings
+.vscode/
+
+# Visual Studio files (if needed)
+.vs/
+
+# Ignore Maven build output
+target/
+
